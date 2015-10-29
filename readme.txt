@@ -57,7 +57,7 @@ function pageMove(tw){
 封装一个滑屏动作方法，判断当前手势为swipeUp or swipeDown时，传入方向参数，调用此方法。动画添加通过outclass/inclass巧妙的控制，这里可根据规则引用animate.css库里的任意动画。
 
 base.js 基础库，主要通过一个构造函数来存放当前项目基础功能，如下：
-var Cici = function(){}
+var Cici = function(file){}
 Cici.prototype = {
 	init: function(){ ... },
 	orient: function(){ ... },
@@ -65,7 +65,7 @@ Cici.prototype = {
 }
 
 通过main.js引用，如下：
-var h5 = new Cici();
+var h5 = new Cici('您的项目名');   //这里传参，便于图片加载及分享调用
     h5.init();
     
 建议：一般H5场景应用类项目，可把所有场景放置一个页面，便于控制及添加动画。同时，要做好图片压缩及代码优化等多方面工作。移动端项目总文件大小尽量控制在2M内，对于目前4G网络加载比较理想。
