@@ -5,7 +5,8 @@
 	@ 作者：繁花落尽|cici
 	@ 时间：2015/10/15
 */
-var Cici = function(){
+var Cici = function(file){
+	this.loc = location.href.split(file)[0]+file;
 	this.hei = $(window).height();
 	this.orientMsg = ['images/orient.png', '为了更好的体验，请使用竖屏浏览'];   //参数1：提示图片   参数2：提示文案
 	this.musicMsg = ['music/bg.mp3', 'images/play.png', 'images/pause.png']; //参数1：音乐路径    参数2：播放图标   参数3：暂停图标
@@ -20,7 +21,7 @@ Cici.prototype = {
 			$('head').append('<link rel="stylesheet" href="css/small.css" />');
 		}
 
-		//this.preload();
+		this.preload();
 		this.orient();
 		this.device();
 		this.music();
@@ -75,14 +76,14 @@ Cici.prototype = {
 			init();
 		}, false)
 	},
-	preload: function(file){
+	preload: function(){
 		/*(function(){
 			var htm = '<div class="loading"><div class="loadIn"><div class="loadRound"><div class="loadTst"></div></div><p class="loadCnt">LOADING</p></div></div>';
 			var sty = '.loading { width: 100%; height: 100%; background: rgba(0, 0, 0, 1); position: absolute; top: 0; left: 0; z-index: 999; }.loadIn { width: 140px; height: 140px; padding-top: 10px; position: relative; margin: 280px auto 0; }.loadRound { height: 100px; width: 100px; border: 1px solid #fff; border-radius: 50%; position: absolute; top: 20px; left: 15px; animation: loadingRound 2s infinite; -webkit-animation: loadingRound 2s infinite; }@keyframes loadingRound {0% { transform: rotate(0deg); }100% { transform: rotate(360deg); }}@-webkit-keyframes loadingRound {0% { -webkit-transform: rotate(0deg); }100% { -webkit-transform: rotate(360deg); }}.loadTst { height: 10px; width: 10px; position: absolute; background-color: #fff; border-radius: 50%; top: 0px; left: 18px; }.loadCnt { position: absolute; top: 60px; left: 30px; font-size: 18px; color: #fff; font-family: calibri; }.loadLogo { width: 100%; position: absolute; top: 200px; font-size: 24px; color: #fff; font-family: Microsoft Yahei; }';
 			$('body').prepend(htm);
 			$('head').append('<style class="style-load">'+sty+'</style>')
 		})();*/
-		var baseUrl = location.href.split(file)[0]+file;
+
 		//load
         var loader = new PxLoader();
 	    var LoadingImg = [];
@@ -96,7 +97,7 @@ Cici.prototype = {
 	    });
 
 	    //添加背景的图片
-	    $('div').each(function(){
+	    $('div,img').each(function(){
 	        if(!$(this).attr('data-src')) return;
 	        LoadingImg.push($(this).attr('data-src'));
 	    });
@@ -104,7 +105,7 @@ Cici.prototype = {
 	    var imgLength = LoadingImg.length; //获取图片的数量
 
 	    for(var i = 0; i < imgLength; i++){
-	        var pxImage = new PxLoaderImage(baseUrl + LoadingImg[i]);
+	        var pxImage = new PxLoaderImage(this.loc + LoadingImg[i]);
 	        pxImage.imageNumber = i + 1;
 	        loader.add(pxImage);
 	    }
@@ -119,8 +120,7 @@ Cici.prototype = {
 
 	    loader.addCompletionListener(function(){
 	        setTimeout(function(){
-	           $('.loading').addClass('hide');
-	           $('.page').eq(0).removeClass('hide');
+	           $('.loading').hide();
 	        },500);
 	    });
 
@@ -174,16 +174,14 @@ Cici.prototype = {
     range: function(a, b){　　　　　　　//取ａ、ｂ两个之前的值　　　ａ，ｂ均为数值、不区分正负
     	return parseInt(Math.random()*Math.abs(a-b)+1);
     },
-	wxshare: function(tit, cnt, file, page){      //微信分享
-		var loc = location.href.split(file)[0]+file;
-		
+	wxshare: function(tit, cnt, page){      //微信分享   标题、话术、要分享的页面
 		//分享默认带参数 &from=timeline&isappinstalled=0
 	    wx.ready(function(){ 
 	        //分享到朋友圈
 	        wx.onMenuShareTimeline({
 	            title: tit, // 分享标题
-	            link: loc+page, // 分享链接
-	            imgUrl: loc+'images/share.jpg', // 分享图标
+	            link: this.loc+page, // 分享链接
+	            imgUrl: this.loc+'images/share.jpg', // 分享图标
 	            success: function () { 
 	                // 用户确认分享后执行的回调函数
 	                confirm("为您为品加赞！")
@@ -198,8 +196,8 @@ Cici.prototype = {
 	        wx.onMenuShareAppMessage({
 	            title: tit, // 分享标题
 	            desc: cnt, // 分享描述
-	            link: loc+page, // 分享链接
-	            imgUrl: loc+'images/share.jpg', // 分享图标
+	            link: this.loc+page, // 分享链接
+	            imgUrl: this.loc+'images/share.jpg', // 分享图标
 	            type: '', // 分享类型,music、video或link，不填默认为link
 	            dataUrl: '', // 如果type是music或video，则要提供数据链接，默认为空
 	            success: function () { 
